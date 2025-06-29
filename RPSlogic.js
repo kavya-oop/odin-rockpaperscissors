@@ -12,6 +12,12 @@
 let humanScore = 0;
 let computerScore = 0;
 
+//update DOM with scores
+const resultDisplay = document.querySelector('.result');
+function updateScores() {
+    resultDisplay.textContent = `Human: ${humanScore} - Computer: ${computerScore}`;
+}
+
 let getComputerChoice = function() {
     let choice = Math.random() * 3; //choice is between 0 and 3 (non-inclusive)
 
@@ -24,10 +30,9 @@ let getComputerChoice = function() {
     }
 };
 
-let getHumanChoice = () => prompt("Pick either rock, paper, or scissors: ");
+let getHumanChoice; // = () => prompt("Pick either rock, paper, or scissors: ");
 
 let playRound = function(computerChoice, humanChoice) {
-
     //REVIEW notes: could have made this more efficient by combining cases
     humanChoice = humanChoice.toLowerCase();
     
@@ -70,19 +75,35 @@ let playRound = function(computerChoice, humanChoice) {
             humanScore++;
         }
     }
-        
+
+    updateScores();
+    if ((humanScore + computerScore) === 5) playGame();
 };
 
 let playGame = function() {
-    for(let i = 0; i < 5; i++) {
-        playRound(getComputerChoice(), getHumanChoice());
-    }
+    //for(let i = 0; i < 5; i++) {
+        //playRound(getComputerChoice(), getHumanChoice());
+    //}
 
     if(humanScore > computerScore) console.log('You win!');
     else if (humanScore == computerScore) console.log('Tied by RNG');
     else console.log('Beat by RNG?? Oop.');
+
+    humanScore = 0;
+    computerScore = 0;
+    updateScores();
 }
 
+//add button functionality
+const buttons = document.querySelectorAll("#btn");
+buttons.forEach((button) => {
 
-//run the game finally!
-playGame();
+    button.addEventListener ("click", () => {
+
+        if (button.classList.contains("rock")) humanChoice = "rock";
+        else if (button.classList.contains("paper")) humanChoice = "paper";
+        else humanChoice = "scissors";
+
+        playRound(getComputerChoice(), humanChoice);
+    });
+});
